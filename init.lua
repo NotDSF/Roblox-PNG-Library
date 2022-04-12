@@ -13,13 +13,13 @@ PNG.__index = PNG
 
 local chunks = setmetatable({}, {
 	__index = function(self, idx) 
-		return loadstring(game:HttpGet(string.format("https://github.com/MaximumADHD/Roblox-PNG-Library/tree/master/Chunks/%s.lua", idx)))();
+		return loadstring(game:HttpGet(string.format("https://raw.githubusercontent.com/NotDSF/Roblox-PNG-Library/tree/master/Chunks/%s.lua", idx)))();
 	end;
 });
 
-local Deflate = loadstring(game:HttpGet("https://github.com/NotDSF/Roblox-PNG-Library/blob/master/Modules/Deflate.lua"))();
-local Unfilter = loadstring(game:HttpGet("https://github.com/NotDSF/Roblox-PNG-Library/blob/master/Modules/Unfilter.lua"))();
-local BinaryReader = loadstring(game:HttpGet("https://github.com/NotDSF/Roblox-PNG-Library/blob/master/Modules/BinaryReader.lua"))();
+local Deflate = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotDSF/Roblox-PNG-Library/master/Modules/Deflate.lua"))();
+local Unfilter = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotDSF/Roblox-PNG-Library/master/Modules/Unfilter.lua"))();
+local BinaryReader = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotDSF/Roblox-PNG-Library/master/Modules/BinaryReader.lua"))();
 
 local function getBytesPerPixel(colorType)
 	if colorType == 0 or colorType == 3 then
