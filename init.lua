@@ -11,15 +11,14 @@
 local PNG = {}
 PNG.__index = PNG
 
-local chunks = setmetatable({}, {
-	__index = function(self, idx) 
-		return loadstring(game:HttpGet(string.format("https://raw.githubusercontent.com/NotDSF/Roblox-PNG-Library/tree/master/Chunks/%s.lua", idx)))();
-	end;
-});
-
 local Deflate = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotDSF/Roblox-PNG-Library/master/Modules/Deflate.lua"))();
 local Unfilter = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotDSF/Roblox-PNG-Library/master/Modules/Unfilter.lua"))();
 local BinaryReader = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotDSF/Roblox-PNG-Library/master/Modules/BinaryReader.lua"))();
+
+local tonumber = tonumber;
+local floor = math.floor;
+local clamp = math.clamp;
+local unpack = unpack;
 
 local function getBytesPerPixel(colorType)
 	if colorType == 0 or colorType == 3 then
@@ -37,9 +36,9 @@ end
 
 local function clampInt(value, min, max)
 	local num = tonumber(value) or 0
-	num = math.floor(num + .5)
+	num = floor(num + .5)
 	
-	return math.clamp(num, min, max)
+	return clamp(num, min, max)
 end
 
 local function indexBitmap(file, x, y)
@@ -148,9 +147,10 @@ function PNG.new(buffer)
 			CRC = crc;
 		}
 		
-		local handler = chunks[chunkType]
+		local ok, res = pcall(game.HttpGet, game, string.format("https://raw.githubusercontent.com/NotDSF/Roblox-PNG-Library/tree/master/Chunks/%s.lua", chunkType));
 		
-		if handler then
+		if ok then
+			handler = loadstring(res)();
 			handler(file, chunk)
 		end
 		

@@ -1,4 +1,6 @@
 local Unfilter = {}
+local band = bit32.band;
+local rshift = bit32.rshift;
 
 function Unfilter:None(scanline, pixels, bpp, row)
 	for i = 1, #scanline do
@@ -14,7 +16,7 @@ function Unfilter:Sub(scanline, pixels, bpp, row)
 	for i = bpp + 1, #scanline do
 		local x = scanline[i]
 		local a = pixels[row][i - bpp]
-		pixels[row][i] = bit32.band(x + a, 0xFF)
+		pixels[row][i] = band(x + a, 0xFF)
 	end
 end
 
@@ -25,7 +27,7 @@ function Unfilter:Up(scanline, pixels, bpp, row)
 		for i = 1, #scanline do
 			local x = scanline[i]
 			local b = upperRow[i]
-			pixels[row][i] = bit32.band(x + b, 0xFF)
+			pixels[row][i] = band(x + b, 0xFF)
 		end
 	else
 		self:None(scanline, pixels, bpp, row)
@@ -38,8 +40,8 @@ function Unfilter:Average(scanline, pixels, bpp, row)
 			local x = scanline[i]
 			local b = pixels[row - 1][i]
 			
-			b = bit32.rshift(b, 1)
-			pixels[row][i] = bit32.band(x + b, 0xFF)
+			b = rshift(b, 1)
+			pixels[row][i] = band(x + b, 0xFF)
 		end
 		
 		for i = bpp + 1, #scanline do
@@ -47,9 +49,9 @@ function Unfilter:Average(scanline, pixels, bpp, row)
 			local b = pixels[row - 1][i]
 			
 			local a = pixels[row][i - bpp]
-			local ab = bit32.rshift(a + b, 1)
+			local ab = rshift(a + b, 1)
 			
-			pixels[row][i] = bit32.band(x + ab, 0xFF)
+			pixels[row][i] = band(x + ab, 0xFF)
 		end
 	else
 		for i = 1, bpp do
@@ -60,8 +62,8 @@ function Unfilter:Average(scanline, pixels, bpp, row)
 			local x = scanline[i]
 			local b = pixels[row - 1][i]
 			
-			b = bit32.rshift(b, 1)
-			pixels[row][i] = bit32.band(x + b, 0xFF)
+			b = rshift(b, 1)
+			pixels[row][i] = band(x + b, 0xFF)
 		end
 	end
 end
@@ -73,7 +75,7 @@ function Unfilter:Paeth(scanline, pixels, bpp, row)
 		for i = 1, bpp do
 			local x = scanline[i]
 			local b = pixels[row - 1][i]
-			pixels[row][i] = bit32.band(x + b, 0xFF)
+			pixels[row][i] = band(x + b, 0xFF)
 		end
 		
 		for i = bpp + 1, #scanline do
@@ -96,7 +98,7 @@ function Unfilter:Paeth(scanline, pixels, bpp, row)
 				pr = c
 			end
 			
-			pixels[row][i] = bit32.band(x + pr, 0xFF)
+			pixels[row][i] = band(x + pr, 0xFF)
 		end
 	else
 		self:Sub(scanline, pixels, bpp, row)

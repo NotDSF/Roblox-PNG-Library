@@ -1,6 +1,9 @@
 local BinaryReader = {}
 BinaryReader.__index = BinaryReader
 
+local sub = string.sub;
+local byte = string.byte;
+
 function BinaryReader.new(buffer)
 	local reader = 
 	{
@@ -17,10 +20,10 @@ function BinaryReader:ReadByte()
 	local pos = self.Position
 	
 	if pos <= self.Length then
-		local result = buffer:sub(pos, pos)
+		local result = sub(buffer, pos, pos)
 		self.Position = pos + 1
 		
-		return result:byte()
+		return byte(result);
 	end
 end
 
@@ -86,7 +89,7 @@ function BinaryReader:ReadString(length)
     local pos = self.Position
     local nextPos = math.min(self.Length, pos + length)
     
-    local result = self.Buffer:sub(pos, nextPos - 1)
+    local result = sub(self.Buffer, pos, nextPos - 1)
     self.Position = nextPos
     
     return result
