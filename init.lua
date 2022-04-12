@@ -147,7 +147,7 @@ function PNG.new(buffer)
 			CRC = crc;
 		}
 		
-		local ok, res = pcall(game.HttpGet, game, string.format("https://raw.githubusercontent.com/NotDSF/Roblox-PNG-Library/tree/master/Chunks/%s.lua", chunkType));
+		local ok, res = pcall(game.HttpGet, game, string.format("https://raw.githubusercontent.com/NotDSF/Roblox-PNG-Library/master/Chunks/%s.lua", chunkType));
 		
 		if ok then
 			handler = loadstring(res)();
