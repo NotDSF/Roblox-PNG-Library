@@ -11,12 +11,15 @@
 local PNG = {}
 PNG.__index = PNG
 
-local chunks = script.Chunks
-local modules = script.Modules
+local chunks = setmetatable({}, {
+	__index = function(self, idx) 
+		return loadstring(game:HttpGet(string.format("https://github.com/MaximumADHD/Roblox-PNG-Library/tree/master/Chunks/%s.lua", idx)))();
+	end;
+});
 
-local Deflate = require(modules.Deflate)
-local Unfilter = require(modules.Unfilter)
-local BinaryReader = require(modules.BinaryReader)
+local Deflate = loadstring(game:HttpGet("https://github.com/NotDSF/Roblox-PNG-Library/blob/master/Modules/Deflate.lua"))();
+local Unfilter = loadstring(game:HttpGet("https://github.com/NotDSF/Roblox-PNG-Library/blob/master/Modules/Unfilter.lua"))();
+local BinaryReader = loadstring(game:HttpGet("https://github.com/NotDSF/Roblox-PNG-Library/blob/master/Modules/BinaryReader.lua"))();
 
 local function getBytesPerPixel(colorType)
 	if colorType == 0 or colorType == 3 then
@@ -145,10 +148,9 @@ function PNG.new(buffer)
 			CRC = crc;
 		}
 		
-		local handler = chunks:FindFirstChild(chunkType)
+		local handler = chunks[chunkType]
 		
 		if handler then
-			handler = require(handler)
 			handler(file, chunk)
 		end
 		
